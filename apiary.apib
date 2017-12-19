@@ -1,0 +1,126 @@
+FORMAT: 1A
+
+# Group 用户
+
+## 用户集合 [/users]
+
+### 注册 [POST]
+
++ username (string) - 用户名
++ password (string) - 密码
+
++ Request (application/json)
+
+        {
+            "username": "test",
+            "password": "test"
+        }
+
++ Response 200
+
+### 获取所有用户 [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "username": "test",
+                "password": "test"
+            }
+        ]
+
+## 用户 [/users/{username}]
+
++ Parameters
+    + username (string) - 用户名
+
+### 删除用户 [DELETE]
+
++ Response 200
+
+## 用户登陆 [/users/signin]
+
+### 用户登陆 [POST]
+
++ username (string) - 用户名
++ password (string) - 密码
+
++ Request (application/json)
+
+        {
+            "username": "test",
+            "password": "test"
+        }
+
++ Response 200
+
+# Group 会议
+
+## 会议集合 [/meetings]
+
+### 创建会议 [POST]
+
++ title (string) - 会议的标题
++ participants (array[string]) - 会议的参与者
++ stime (string) - 会议的开始时间
++ etime (string) - 会议的结束时间
+
++ Request (application/json)
+
+        {
+            "title": "test",
+            "participants": ["test"],
+            "stime": "2017-06-30 12:00",
+            "etime": "2017-06-30 12:30"
+        }
+
++ Response 200
+
+### 清除用户的所有会议 [DELETE]
+
++ Response 200
+
+## 查询会议 [/meetings{?stime}{?etime}]
+
++ Parameters
+    + stime (string) - 会议的开始时间
+    + etime (string) - 会议的结束时间
+
+### 查询会议 [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "title": "test",
+                "sponsor": "test",
+                "participants": ["test"],
+                "stime": "2017-06-30 12:00",
+                "etime": "2017-06-30 12:30"
+            }
+        ]
+
+## 会议参与者 [/meetings/{title}/participants/{username}]
+
++ Parameters
+    + title (string) - 会议的标题
+    + username (string) - 要添加的参与者的用户名
+
+### 添加参与者 [POST]
+
++ Response 200
+
+### 删除参与者 [DELETE]
+
++ Response 200
+
+## 删除、退出会议 [/meetings/{title}]
+
++ Parameters
+    + title (string) - 会议的标题
+
+### 删除、退出会议 [DELETE]
+
+如果是发起者，则删除会议；如果是参与者，则退出会议。
+
++ Response 200
