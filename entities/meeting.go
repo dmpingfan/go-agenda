@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Meeting .
 type Meeting struct {
 	Title         string
 	Sponsor       string
@@ -31,6 +32,7 @@ var queryMeetingsByTime = `SELECT * FROM meeting AS m WHERE (m.sponsor = ? OR m.
 var addParticipator = `UPDATE meeting SET participators = participators || ? WHERE title = ?;`
 var updateParticipators = `UPDATE meeting SET participators = ? WHERE title = ?;`
 
+// CreateMeeting .
 func CreateMeeting(username, title, participators, stime, etime string) error {
 	var err error
 	// 检查会议的标题是否已存在
@@ -46,6 +48,7 @@ func CreateMeeting(username, title, participators, stime, etime string) error {
 	return err
 }
 
+// AddParticipator .
 func AddParticipator(username, title, participator string) error {
 	var err error
 
@@ -57,6 +60,7 @@ func AddParticipator(username, title, participator string) error {
 	return err
 }
 
+// DeleteParticipator .
 func DeleteParticipator(username, title, participator string) error {
 	var err error
 	meeting := Meeting{}
@@ -78,6 +82,7 @@ func DeleteParticipator(username, title, participator string) error {
 	return err
 }
 
+// QueryMeetingsByTime .
 func QueryMeetingsByTime(username, stime, etime string) ([]Meeting, error) {
 	var err error
 	rows, err := db.Query(queryMeetingsByTime, username, "%"+username+"%", stime, etime)
@@ -93,6 +98,7 @@ func QueryMeetingsByTime(username, stime, etime string) ([]Meeting, error) {
 	return meetings, err
 }
 
+// DeleteMeeting .
 // 如果是发起者，则删除会议
 // 如果是参与者，则退出会议
 func DeleteMeeting(username, title string) error {
@@ -116,6 +122,7 @@ func DeleteMeeting(username, title string) error {
 	return err
 }
 
+// DeleteMeetings .
 // 如果是发起者，则删除会议
 // 如果是参与者，则退出会议
 func DeleteMeetings(username string) error {

@@ -4,6 +4,7 @@ import (
 	"errors"
 )
 
+// User .
 type User struct {
 	Username string
 	Password string
@@ -20,6 +21,7 @@ var findAllUsers = "SELECT * FROM user;"
 var createUser = "INSERT INTO user (username, password) VALUES (?, ?);"
 var deleteUser = "DELETE FROM user WHERE user.username = ?;"
 
+// Register .
 func Register(username, password string) error {
 	var err error
 	// 检查是否被注册
@@ -35,6 +37,7 @@ func Register(username, password string) error {
 	return err
 }
 
+// GetAllUsers .
 func GetAllUsers() ([]User, error) {
 	var err error
 	rows, err := db.Query(findAllUsers)
@@ -50,6 +53,7 @@ func GetAllUsers() ([]User, error) {
 	return users, err
 }
 
+// DeleteUser .
 func DeleteUser(username string) error {
 	var err error
 	_, err = db.Exec(deleteUser, username)

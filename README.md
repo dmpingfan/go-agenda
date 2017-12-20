@@ -96,7 +96,7 @@ docker build -t go-agenda .
   + 用户注册（application/x-www-urlencoded）
     ![用户注册](README/register.png)
 
-  + 用户登陆
+  + 用户登陆（application/x-www-urlencoded）
     ![用户登录](README/login.png)
 
   只给出上面两个例子，其它详见 API.html。

@@ -3,7 +3,7 @@ package entities
 import (
 	"database/sql"
 
-	_ "github.com/painterdrown/service-computing/go-sqlite3"
+	_ "github.com/painterdrown/service-computing/go-sqlite3" //
 )
 
 var db *sql.DB
