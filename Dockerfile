@@ -1,5 +1,4 @@
 FROM golang:1.8
-
 WORKDIR /
 ADD . "$GOPATH/src/github.com/painterdrown/go-agenda"
 RUN cd "$GOPATH/src/github.com/painterdrown/go-agenda/cli" && go get -u && go install
