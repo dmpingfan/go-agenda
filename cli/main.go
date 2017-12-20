@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/painterdrown/go-agenda/entity"
+	"github.com/painterdrown/go-agenda/entities"
 )
 
 func main() {
 	// 测试
-	entity.Register("cli", "cli")
+	entities.Register("cli", "cli")
 }

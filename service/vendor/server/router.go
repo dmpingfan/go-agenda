@@ -8,7 +8,7 @@ import (
 	"net/url"
 
 	"github.com/gorilla/mux"
-	"github.com/painterdrown/go-agenda/entity"
+	"github.com/painterdrown/go-agenda/entities"
 )
 
 var user_list map[string]bool
@@ -64,7 +64,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if CheckRequire(w, r.Form, "username", "password") {
 		return
 	}
-	err := entity.Register(r.Form["username"][0], r.Form["password"][0])
+	err := entities.Register(r.Form["username"][0], r.Form["password"][0])
 	log.Printf(
 		"INFO: user register: username '%s', password '%s'",
 		r.Form["username"][0], r.Form["password"][0])
@@ -75,7 +75,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func GetAllUserHandler(w http.ResponseWriter, r *http.Request) {
-	users, err := entity.GetAllUsers()
+	users, err := entities.GetAllUsers()
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -88,7 +88,7 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	if LoginFirst(w, username) == false {
 		return
 	}
-	err := entity.DeleteUser(username)
+	err := entities.DeleteUser(username)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -107,7 +107,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		FailResponse(w, http.StatusInternalServerError, "u have log in !")
 		return
 	}
-	users, err := entity.GetAllUsers()
+	users, err := entities.GetAllUsers()
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 		return
@@ -141,7 +141,7 @@ func CreateMeetingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	participators += ","
-	err := entity.CreateMeeting(username, title, participators, stime, etime)
+	err := entities.CreateMeeting(username, title, participators, stime, etime)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -156,7 +156,7 @@ func DeleteMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	if LoginFirst(w, username) == false {
 		return
 	}
-	err := entity.DeleteMeetings(username)
+	err := entities.DeleteMeetings(username)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -175,7 +175,7 @@ func QueryMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	if CheckRequire(w, r.Form, "stime", "etime") {
 		return
 	}
-	meetings, err := entity.QueryMeetings(username, r.Form["stime"][0], r.Form["etime"][0])
+	meetings, err := entities.QueryMeetings(username, r.Form["stime"][0], r.Form["etime"][0])
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -193,7 +193,7 @@ func AddParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 		FailResponse(w, http.StatusInternalServerError, "title/username/participator is empty")
 		return
 	}
-	err := entity.AddParticipator(username, title, participator)
+	err := entities.AddParticipator(username, title, participator)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -211,7 +211,7 @@ func DeleteParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 		FailResponse(w, http.StatusInternalServerError, "title/username/participator is empty")
 		return
 	}
-	err := entity.DeleteParticipator(username, title, participator)
+	err := entities.DeleteParticipator(username, title, participator)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -228,7 +228,7 @@ func DropMeetingHandler(w http.ResponseWriter, r *http.Request) {
 		FailResponse(w, http.StatusInternalServerError, "title is empty")
 		return
 	}
-	err := entity.DeleteMeeting(username, title)
+	err := entities.DeleteMeeting(username, title)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
