@@ -17,9 +17,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/painterdrown/go-agenda/cli/entity/AgendaLog"
-	"github.com/painterdrown/go-agenda/cli/entity/Meeting"
-	"github.com/painterdrown/go-agenda/cli/entity/User"
+	"github.com/painterdrown/go-agenda/cli/entities/AgendaLog"
+	"github.com/painterdrown/go-agenda/cli/entities/Meeting"
+	"github.com/painterdrown/go-agenda/cli/entities/User"
 	"github.com/spf13/cobra"
 )
 

@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/painterdrown/go-agenda/entity"
+	"github.com/painterdrown/go-agenda/entities"
 )
 
 type User struct {
@@ -14,8 +14,8 @@ type User struct {
 	UserPass string
 }
 
-func returnAllUser() ([]entity.User, error) {
-	allUser, err := entity.GetAllUsers()
+func returnAllUser() ([]entities.User, error) {
+	allUser, err := entities.GetAllUsers()
 	return allUser, err
 }
 
@@ -35,7 +35,7 @@ func UserRegitser(body User) error {
 	if string(stream) != "" {
 		return errors.New("You should louout the current account")
 	}
-	err := entity.Register(body.UserName, body.UserPass)
+	err := entities.Register(body.UserName, body.UserPass)
 	return err
 }
 
@@ -89,7 +89,7 @@ func UserDelete() error {
 	if string(stream) == "" {
 		return errors.New("Please login first")
 	}
-	err := entity.DeleteUser(string(stream))
+	err := entities.DeleteUser(string(stream))
 	file1, _ := os.OpenFile("curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
 	file1.WriteString("")
 	return err

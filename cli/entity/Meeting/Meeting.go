@@ -1,7 +1,7 @@
 package Meeting
 
 import (
-	"github.com/painterdrown/go-agenda/entity"
+	"github.com/painterdrown/go-agenda/entities"
 )
 
 type Meetings struct {
@@ -13,31 +13,31 @@ type Meetings struct {
 }
 
 func AddOneMeeting(futureMeeting Meetings) error {
-	err := entity.CreateMeeting(futureMeeting.Initiator, futureMeeting.Title, futureMeeting.Participator, futureMeeting.STime, futureMeeting.ETime)
+	err := entities.CreateMeeting(futureMeeting.Initiator, futureMeeting.Title, futureMeeting.Participator, futureMeeting.STime, futureMeeting.ETime)
 	return err
 }
 
 func AddParticipators(currentUser, Title string, NewParticipator string) error {
-	err := entity.AddParticipator(currentUser, Title, NewParticipator)
+	err := entities.AddParticipator(currentUser, Title, NewParticipator)
 	return err
 }
 
 func DeleteParticipators(currentUser, Title string, NewParticipator string) error {
-	err := entity.DeleteParticipator(currentUser, Title, NewParticipator)
+	err := entities.DeleteParticipator(currentUser, Title, NewParticipator)
 	return err
 }
 
 func DeleteMeetingByTitle(currentUser, Title string) error {
-	err := entity.DeleteMeeting(currentUser, Title)
+	err := entities.DeleteMeeting(currentUser, Title)
 	return err
 }
 
-func QueryMeetingByTime(currentUser string, STime, ETime string) ([]entity.Meeting, error) {
-	meetings, err := entity.QueryMeetings(currentUser, STime, ETime)
+func QueryMeetingByTime(currentUser string, STime, ETime string) ([]entities.Meeting, error) {
+	meetings, err := entities.QueryMeetings(currentUser, STime, ETime)
 	return meetings, err
 }
 
 func ClearAllUserMeeting(currentUser string) error {
-	err := entity.DeleteMeetings(currentUser)
+	err := entities.DeleteMeetings(currentUser)
 	return err
 }
