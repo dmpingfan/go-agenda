@@ -94,10 +94,10 @@ docker build -t go-agenda .
 ## Usage of service
 
 + 用户注册（application/x-www-urlencoded）
-  ![用户注册](README/register.png)
+  ![用户注册](assets/register.png)
 
 + 用户登陆（application/x-www-urlencoded）
-  ![用户登录](README/login.png)
+  ![用户登录](assets/login.png)
 
 只给出上面两个例子，其它详见 API.html。
 
