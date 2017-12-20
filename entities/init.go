@@ -8,10 +8,11 @@ import (
 
 var db *sql.DB
 
-func init() {
+// InitDB .
+func InitDB(dbpath string) {
 	var err error
 	// TODO
-	db, err = sql.Open("sqlite3", "/data/go-agenda.db")
+	db, err = sql.Open("sqlite3", dbpath)
 	if err != nil {
 		panic("数据库连接错误")
 	}

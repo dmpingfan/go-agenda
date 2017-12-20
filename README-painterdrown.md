@@ -34,4 +34,4 @@ https://github.com/painterdrown/go-agenda
 + Docker 部分。本次项目是将 cli 和 service 两个程序部署在一个 Docker 镜像中。
   + 对于 Go + Docker 项目的开发，应该将项目放在镜像的 $GOPATH/src/ 目录下，不然编译时会出错。
   + Docker 中 VOLUME 是一个很重要的概念，用于同步本地路径与 Docker 容器路径。需要在 Dockerfile 文件中声明 VOLUME 路径，然后在 run 的时候再指定具体的路径。这样一来，容器中凡是存储在 VOLUME 目录下的文件都会相应地存在与本地的指定路径，有点类型与 Linux 系统中的 mount。
-  + 
++ Travis CI 部分。我是第一次接触到“持续集成”这个概念。阅读官方文档后了解到持续集成是
