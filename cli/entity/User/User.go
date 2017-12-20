@@ -31,6 +31,7 @@ func IsUser(userName string) bool {
 
 //增加注册用户
 func UserRegitser(body User) error {
+	// TODO
 	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) != "" {
 		return errors.New("You should louout the current account")
@@ -42,14 +43,14 @@ func UserRegitser(body User) error {
 //登录
 func UserLogin(userName, password string) error {
 	// TODO
-	stream, _ := ioutil.ReadFile("curUser.txt")
+	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) != "" {
 		return errors.New("Please logout the current account first")
 	}
 	allUser, _ := returnAllUser()
 	for index, value := range allUser {
 		if value.Username == userName && value.Password == password {
-			file, _ := os.OpenFile("curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
+			file, _ := os.OpenFile("/data/curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
 			file.WriteString(value.Username)
 			return nil
 		} else if value.Username == userName && value.Password != password {
@@ -63,18 +64,21 @@ func UserLogin(userName, password string) error {
 
 //登出
 func UserLogout() error {
-	stream, _ := ioutil.ReadFile("curUser.txt")
+	// TODO
+	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) == "" {
 		return errors.New("You has been logout")
 	}
-	file, _ := os.OpenFile("curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
+	// TODO
+	file, _ := os.OpenFile("/data/curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
 	file.WriteString("")
 	return nil
 }
 
 //检测登录状态
 func UserState() string {
-	stream, _ := ioutil.ReadFile("curUser.txt")
+	// TODO
+	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) == "" {
 		fmt.Println("You haven't logged in yet, Please login at first")
 		return ""
@@ -86,12 +90,14 @@ func UserState() string {
 
 //已登录用户删除用户
 func UserDelete() error {
-	stream, _ := ioutil.ReadFile("curUser.txt")
+	// TODO
+	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) == "" {
 		return errors.New("Please login first")
 	}
 	err := entities.DeleteUser(string(stream))
-	file1, _ := os.OpenFile("curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
+	// TODO
+	file1, _ := os.OpenFile("/data/curUser.txt", os.O_CREATE|os.O_RDWR|os.O_TRUNC, os.ModeAppend|os.ModePerm)
 	file1.WriteString("")
 	return err
 }
