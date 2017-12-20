@@ -10,10 +10,10 @@ services:
   - docker
 
 script:
-  - echo 'Mock 测试'
-  - go test -v ./entities
   - echo 'Docker 镜像构建测试'
   - docker build . -t go-agenda
+  - echo 'Mock 测试'
+  - go test -v ./entities
   - echo 'Docker 容器运行测试'
   - docker run --name go-agenda-sevice -d -v ~:/data -p 3000:3000 go-agenda service
   - docker run --name go-agenda-cli ~:/data go-agenda cli
