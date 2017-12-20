@@ -33,7 +33,7 @@ func DeleteMeetingByTitle(currentUser, Title string) error {
 }
 
 func QueryMeetingByTime(currentUser string, STime, ETime string) ([]entities.Meeting, error) {
-	meetings, err := entities.QueryMeetings(currentUser, STime, ETime)
+	meetings, err := entities.QueryMeetingsByTime(currentUser, STime, ETime)
 	return meetings, err
 }
 

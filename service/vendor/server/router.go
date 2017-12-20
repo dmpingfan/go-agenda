@@ -84,7 +84,7 @@ func GetAllUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	if LoginFirst(w, username) == false {
 		return
 	}
@@ -126,10 +126,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 func CreateMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.Form["title"][0]
-	username := mux.Vars(r)["username"]
-	participators := r.Form["participator"][0]
+	username := r.Form["username"][0]
+	participators := r.Form["participators"][0]
 	stime := r.Form["stime"][0]
 	etime := r.Form["etime"][0]
+	println("haha")
 	/*ps := strings.FieldsFunc(participators, func(arg1 rune) bool {
 		return arg1 == ','
 	})*/
@@ -140,7 +141,7 @@ func CreateMeetingHandler(w http.ResponseWriter, r *http.Request) {
 		FailResponse(w, http.StatusInternalServerError, "title/participator/stime/etime is empty")
 		return
 	}
-	participators += ","
+	println("haha")
 	err := entities.CreateMeeting(username, title, participators, stime, etime)
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
@@ -152,7 +153,7 @@ func CreateMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func DeleteMeetingHandler(w http.ResponseWriter, r *http.Request) {
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	if LoginFirst(w, username) == false {
 		return
 	}
@@ -168,14 +169,14 @@ func DeleteMeetingHandler(w http.ResponseWriter, r *http.Request) {
 }
 func QueryMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	if LoginFirst(w, username) == false {
 		return
 	}
 	if CheckRequire(w, r.Form, "stime", "etime") {
 		return
 	}
-	meetings, err := entities.QueryMeetings(username, r.Form["stime"][0], r.Form["etime"][0])
+	meetings, err := entities.QueryMeetingsByTime(username, r.Form["stime"][0], r.Form["etime"][0])
 	if err != nil {
 		FailResponse(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -184,7 +185,7 @@ func QueryMeetingHandler(w http.ResponseWriter, r *http.Request) {
 }
 func AddParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 	title := mux.Vars(r)["title"]
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	participator := mux.Vars(r)["participator"]
 	if LoginFirst(w, username) == false {
 		return
@@ -202,7 +203,7 @@ func AddParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 }
 func DeleteParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 	title := mux.Vars(r)["title"]
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	participator := mux.Vars(r)["participator"]
 	if LoginFirst(w, username) == false {
 		return
@@ -220,7 +221,7 @@ func DeleteParticipatorsHandler(w http.ResponseWriter, r *http.Request) {
 }
 func DropMeetingHandler(w http.ResponseWriter, r *http.Request) {
 	title := mux.Vars(r)["title"]
-	username := mux.Vars(r)["username"]
+	username := r.Form["username"][0]
 	if LoginFirst(w, username) == false {
 		return
 	}
@@ -240,17 +241,17 @@ func router() http.Handler {
 	user_list = make(map[string]bool)
 	user_list["init"] = false
 	router := mux.NewRouter()
-	router.HandleFunc("/users", RegisterHandler).Methods("POST")                //注册
-	router.HandleFunc("/users", GetAllUserHandler).Methods("GET")               //获取所有用户
-	router.HandleFunc("/users/{username}", DeleteUserHandler).Methods("DELETE") //删除用户
-	router.HandleFunc("/users/signin", LoginHandler).Methods("POST")            //登陆
+	router.HandleFunc("/users", RegisterHandler).Methods("POST")     //注册
+	router.HandleFunc("/users", GetAllUserHandler).Methods("GET")    //获取所有用户
+	router.HandleFunc("/users", DeleteUserHandler).Methods("DELETE") //删除用户
+	router.HandleFunc("/users/signin", LoginHandler).Methods("POST") //登陆
 
-	router.HandleFunc("/meetings/{username}", CreateMeetingHandler).Methods("POST")                                              //创建会议
-	router.HandleFunc("/meetings/{username}", DeleteMeetingHandler).Methods("DELETE")                                            //清除用户的所有会议
-	router.HandleFunc("/meetings/{username}", QueryMeetingHandler).Methods("GET")                                                //查询会议
-	router.HandleFunc("/meetings/{username}/{title}/participators/{participator}", AddParticipatorsHandler).Methods("POST")      //添加参与者
-	router.HandleFunc("/meetings/{username}/{title}/participators/{participator}", DeleteParticipatorsHandler).Methods("DELETE") //删除参与者
-	router.HandleFunc("/meetings/{username}/{title}", DropMeetingHandler).Methods("DELETE")                                      //删除，退出会议
+	router.HandleFunc("/meetings", CreateMeetingHandler).Methods("POST")                                              //创建会议
+	router.HandleFunc("/meetings", DeleteMeetingHandler).Methods("DELETE")                                            //清除用户的所有会议
+	router.HandleFunc("/meetings", QueryMeetingHandler).Methods("GET")                                                //查询会议
+	router.HandleFunc("/meetings/{title}/participators/{participator}", AddParticipatorsHandler).Methods("POST")      //添加参与者
+	router.HandleFunc("/meetings/{title}/participators/{participator}", DeleteParticipatorsHandler).Methods("DELETE") //删除参与者
+	router.HandleFunc("/meetings/{title}", DropMeetingHandler).Methods("DELETE")                                      //删除，退出会议
 
 	return router
 }

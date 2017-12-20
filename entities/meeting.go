@@ -23,10 +23,11 @@ CREATE TABLE IF NOT EXISTS meeting (
 );
 `
 var createMeeting = `INSERT INTO meeting (title, sponsor, participators, stime, etime) VALUES (?, ?, ?, ?, ?);`
-var deleteMeetings = `DELETE FROM meeting WHERE sponsor = ? OR participators LIKE ?;`
+var deleteMeetingByUsername = `DELETE FROM meeting WHERE sponsor = ?;`
 var deleteMeetingByTitle = `DELETE FROM meeting WHERE title = ?;`
 var queryMeetingByTitle = `SELECT * FROM meeting WHERE meeting.title = ?;`
-var queryMeetings = `SELECT * FROM meeting AS m WHERE (m.sponsor = ? OR m.participators LIKE ?) AND (m.stime >= ? AND m.etime <= ?);`
+var queryMeetingsByUsername = `SELECT * FROM meeting AS m WHERE m.sponsor = ? OR m.participators LIKE ?;`
+var queryMeetingsByTime = `SELECT * FROM meeting AS m WHERE (m.sponsor = ? OR m.participators LIKE ?) AND (m.stime >= ? AND m.etime <= ?);`
 var addParticipator = `UPDATE meeting SET participators = participators || ? WHERE title = ?;`
 var updateParticipators = `UPDATE meeting SET participators = ? WHERE title = ?;`
 
@@ -45,29 +46,6 @@ func CreateMeeting(username, title, participators, stime, etime string) error {
 	return err
 }
 
-// 删除用户举办或参与的所有会议
-func DeleteMeetings(username string) error {
-	var err error
-	_, err = db.Exec(deleteMeetings, username, "%"+username+"%")
-	checkErr(err)
-	return err
-}
-
-func QueryMeetings(username, stime, etime string) ([]Meeting, error) {
-	var err error
-	rows, err := db.Query(queryMeetings, username, "%"+username+"%", stime, etime)
-	checkErr(err)
-	defer rows.Close()
-	meetings := make([]Meeting, 0, 0)
-	for rows.Next() {
-		meeting := Meeting{}
-		err = rows.Scan(&meeting.Title, &meeting.Sponsor, &meeting.Participators, &meeting.Stime, &meeting.Etime)
-		checkErr(err)
-		meetings = append(meetings, meeting)
-	}
-	return meetings, err
-}
-
 func AddParticipator(username, title, participator string) error {
 	var err error
 
@@ -82,7 +60,7 @@ func AddParticipator(username, title, participator string) error {
 func DeleteParticipator(username, title, participator string) error {
 	var err error
 	meeting := Meeting{}
-	row := db.QueryRow(queryMeetingByTitle, username)
+	row := db.QueryRow(queryMeetingByTitle, title)
 	row.Scan(&meeting.Title, &meeting.Sponsor, &meeting.Participators, &meeting.Stime, &meeting.Etime)
 	if meeting.Title == "" {
 		return errors.New("该会议不存在")
@@ -100,26 +78,68 @@ func DeleteParticipator(username, title, participator string) error {
 	return err
 }
 
+func QueryMeetingsByTime(username, stime, etime string) ([]Meeting, error) {
+	var err error
+	rows, err := db.Query(queryMeetingsByTime, username, "%"+username+"%", stime, etime)
+	checkErr(err)
+	defer rows.Close()
+	meetings := make([]Meeting, 0, 0)
+	for rows.Next() {
+		meeting := Meeting{}
+		err = rows.Scan(&meeting.Title, &meeting.Sponsor, &meeting.Participators, &meeting.Stime, &meeting.Etime)
+		checkErr(err)
+		meetings = append(meetings, meeting)
+	}
+	return meetings, err
+}
+
 // 如果是发起者，则删除会议
 // 如果是参与者，则退出会议
 func DeleteMeeting(username, title string) error {
 	var err error
 	meeting := Meeting{}
-	row := db.QueryRow(queryMeetingByTitle, username)
+	row := db.QueryRow(queryMeetingByTitle, title)
 	row.Scan(&meeting.Title, &meeting.Sponsor, &meeting.Participators, &meeting.Stime, &meeting.Etime)
 	if meeting.Title == "" {
 		return errors.New("该会议不存在")
 	}
 	if meeting.Sponsor == username {
-		_, err = db.Exec(deleteMeetingByTitle, title)
+		_, err = db.Exec(deleteMeetingByUsername, username)
 		checkErr(err)
-		return err
 	} else if pos := strings.Index(meeting.Participators, username); pos != -1 {
 		newParticipators := meeting.Participators[0:pos] + meeting.Participators[pos+len(username)+1:]
 		_, err = db.Exec(updateParticipators, newParticipators, title)
 		checkErr(err)
-		return err
 	} else {
-		return errors.New("与该会议无关系")
+		err = errors.New("用户并没有参与该会议")
 	}
+	return err
+}
+
+// 如果是发起者，则删除会议
+// 如果是参与者，则退出会议
+func DeleteMeetings(username string) error {
+	var err error
+	rows, err := db.Query(queryMeetingsByUsername, username, "%"+username+"%")
+	checkErr(err)
+	defer rows.Close()
+	meetings := make([]Meeting, 0, 0)
+	for rows.Next() {
+		meeting := Meeting{}
+		err = rows.Scan(&meeting.Title, &meeting.Sponsor, &meeting.Participators, &meeting.Stime, &meeting.Etime)
+		checkErr(err)
+		meetings = append(meetings, meeting)
+	}
+	for _, meeting := range meetings {
+		if meeting.Sponsor == username {
+			_, err = db.Exec(deleteMeetingByUsername, username)
+			checkErr(err)
+		} else {
+			pos := strings.Index(meeting.Participators, username)
+			newParticipators := meeting.Participators[0:pos] + meeting.Participators[pos+len(username)+1:]
+			_, err = db.Exec(updateParticipators, newParticipators, meeting.Title)
+			checkErr(err)
+		}
+	}
+	return err
 }

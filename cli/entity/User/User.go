@@ -31,7 +31,7 @@ func IsUser(userName string) bool {
 
 //增加注册用户
 func UserRegitser(body User) error {
-	stream, _ := ioutil.ReadFile("curUser.txt")
+	stream, _ := ioutil.ReadFile("/data/curUser.txt")
 	if string(stream) != "" {
 		return errors.New("You should louout the current account")
 	}
@@ -41,6 +41,7 @@ func UserRegitser(body User) error {
 
 //登录
 func UserLogin(userName, password string) error {
+	// TODO
 	stream, _ := ioutil.ReadFile("curUser.txt")
 	if string(stream) != "" {
 		return errors.New("Please logout the current account first")
