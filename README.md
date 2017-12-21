@@ -12,9 +12,12 @@ docker build -t go-agenda .
 
 ## Docker 使用方法
 
-+ 下载镜像
++ 下载项目并构建镜像
   ```bash
-  docker pull painterdrown/go-agenda
+  # docker pull painterdrown/go-agenda  由于构建 Docker 镜像时不能翻墙下载 golang.org 的一些 package 因此没有 push 到 Docker Hub 上。但是再 Travis CI 中是可以成功构建镜像的。 
+  go get -u github.com/painterdrown/go-agenda
+  cd $GOPATH/src/github.com/painterdrown/go-agenda
+  docker build . -t go-agenda
   ```
 
 + 启动 service 服务器
@@ -30,6 +33,10 @@ docker build -t go-agenda .
   docker run --name go-agenda-cli -v $DATA_PATH:/data go-agenda cli [COMMAND] [ARG...]
   ```
   > 比如：docker run --name go-agenda-cli -v ~:/data go-agenda cli --help<br/>
+
++ Travis CI 地址
+  > https://travis-ci.org/painterdrown/go-agenda
+  
 
 ## Usage of cli
 
