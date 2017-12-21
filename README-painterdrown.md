@@ -31,7 +31,7 @@ https://github.com/painterdrown/go-agenda
 
 通过本次 go-agenda 项目，我的确接触和学习到了许多关于后端开发的知识
 
-+ API 设计部分。本次项目要求使用 RESTful 规范进行 API 的设计。除了登陆这个 API 之外，其他都能很好的根据服务资源的 CRUD 操作进行设计。但是如果将“登录”的 API 设计为：```POST users/login```，则不太符合 RESTful 规范，因为不该在 URL 中使用动词，动作应该通过 HTTP 方法来体现。Google 一番之后，觉得目前最合理的“登录” API 设计是：```POST sessions```。理解：登录操作会在服务器创建一个 session 的资源。
++ API 设计部分。本次项目要求使用 RESTful 规范进行 API 的设计。除了登陆这个 API 之外，其他都能很好的根据服务资源的 CRUD 操作进行设计。但是如果将“登录”的 API 设计为：`POST users/login`，则不太符合 RESTful 规范，因为不该在 URL 中使用动词，动作应该通过 HTTP 方法来体现。Google 一番之后，觉得目前最合理的“登录” API 设计是：`POST sessions`。理解：登录操作会在服务器创建一个 session 的资源。
 
 + Docker 部分。本次项目是将 cli 和 service 两个程序部署在一个 Docker 镜像中。
   + 对于 Go + Docker 项目的开发，应该将项目放在镜像的 $GOPATH/src/ 目录下，不然编译时会出错。
